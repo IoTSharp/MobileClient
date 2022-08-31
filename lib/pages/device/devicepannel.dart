@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
 import '../../models/deviceattrresult.dart';
 import '../../models/devicedetailresult.dart';
@@ -53,6 +54,9 @@ class _DevicePanelState extends State<DevicePanel> {
   @override
   void initState() {
     var profile = getUserProfile();
+
+
+
 
     getIt<Dio>()
         .get('${profile?.serverurl}/api/Devices/${this.DeviceId}')

@@ -13,6 +13,9 @@ import '../util/getit.dart';
 import '../widgets/advanced_datatable/advancedDataTableSource.dart';
 import '../widgets/advanced_datatable/datatable.dart';
 import 'device/devicepannel.dart';
+import 'device/devicepropaddform.dart';
+import 'device/devicepropform.dart';
+import 'device/devicform.dart';
 
 class ListPage extends StatefulWidget {
   String title = 'IotSharp';
@@ -169,11 +172,11 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
                     children: [
                       Expanded(
                           child: Row(
-                        children: [
-                          Text('认证方式:'),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
-                          ),
+                      children: [
+                        //   Text('认证方式:'),
+                        //   Padding(
+                        //     padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                        //   ),
                           Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
@@ -205,7 +208,19 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
                               Text((device.online ?? false) ? '在线' : '离线')))
                        ],) )
                      ,
-
+                      Expanded(child: Row( children: [ Text('在线状态:'), Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: (device.online ?? false)
+                                ? Colors.greenAccent
+                                : Colors.redAccent,
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  5, 2, 5, 2),
+                              child:
+                              Text((device.online ?? false) ? '在线' : '离线')))
+                      ],) )
                     ],
                   )),
               Container(
@@ -233,12 +248,43 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
   cellToolPressed(EventArgs args) {
     switch (args.eventName) {
       case 'edit':
+
+        Navigator.of(args.context, rootNavigator: true).push(
+          CupertinoPageRoute<bool>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => DeviceForm(
+              DeviceId: args.item.id!,
+            ),
+          ),
+        );
         setNextView();
         break;
       case 'delete':
         setNextView();
         break;
+
+      case 'proptityadd':
+        Navigator.of(args.context, rootNavigator: true).push(
+          CupertinoPageRoute<bool>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => DevicePropAddForm(
+              DeviceId: args.item.id!,
+            ),
+          ),
+        );
+        break;
+
       case 'proptityedit':
+
+        Navigator.of(args.context, rootNavigator: true).push(
+          CupertinoPageRoute<bool>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => DevicePropForm(
+              DeviceId: args.item.id ?? '',
+            ),
+          ),
+        );
+
         break;
       case 'gettoken':
         Clipboard.setData(ClipboardData(text:args.item.identityId??'' ));
@@ -345,6 +391,8 @@ class CellTool extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
             ),
+
+
             OutlinedButton(
                 onPressed: () {
                   onPressed(EventArgs(
@@ -369,6 +417,33 @@ class CellTool extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
             ),
+
+
+            OutlinedButton(
+                onPressed: () {
+                  onPressed(EventArgs(
+                      eventName: 'proptityadd', item: item, context: context));
+                },
+                style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    )),
+                    side: MaterialStateProperty.all(
+                      BorderSide(color: Colors.cyanAccent, width: 2.0),
+                    )),
+                child: Text(
+                  '增加属性',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.cyanAccent,
+                      fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.center,
+                )),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+            ),
+
             OutlinedButton(
                 onPressed: () {
                   onPressed(EventArgs(
@@ -393,6 +468,8 @@ class CellTool extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
             ),
+
+
             OutlinedButton(
                 onPressed: () {
                   onPressed(EventArgs(

@@ -58,11 +58,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
 
     switch (routeName) {
       case "/":
-        return MyHomePage(title:'Iotshap');
+        return const MyHomePage(title:'Iotshap');
       case "/SignIn":
         return SignInPage();
       default:
-        return Scaffold(
+        return const Scaffold(
           body: Center(
             child: Text("页面不存在"),
           ),

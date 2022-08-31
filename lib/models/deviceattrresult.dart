@@ -16,7 +16,7 @@ class DeviceAttrItem{
   String?  dataType;
   String?  dateTime;
   String?  keyName;
-  String?  value;
+  dynamic?  value;
   DeviceAttrItem.fromJson(Map json)
       : dataSide = json['dataSide'],
         dataType = json['dataType'],

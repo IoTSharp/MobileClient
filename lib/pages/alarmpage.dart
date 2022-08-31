@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlarmPage extends StatefulWidget {
-  String title = 'IotSharp';
-  static const androidIcon = Icon(Icons.library_books);
-  static const iosIcon = Icon(CupertinoIcons.home);
 
   @override
   State<StatefulWidget> createState() {
