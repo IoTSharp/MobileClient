@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../../models/const/deviceconst.dart';
+import '../../models/dropdownoption.dart';
 import '../../widgets/customfloatingactionbutton/customfloatingactionbuttonlocation.dart';
 
 class DevicePropAddForm extends StatefulWidget{
@@ -75,7 +76,7 @@ class _DevicePropAddFormState extends State<DevicePropAddForm>{
                     ),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required()]),
-                    items: DataTypes
+                    items: DataTypes.map((e) => DateTypeOption(text: e,value: e))
                         .map((dt) => DropdownMenuItem(
                       alignment: AlignmentDirectional.center,
                       value: dt.value,
@@ -97,7 +98,7 @@ class _DevicePropAddFormState extends State<DevicePropAddForm>{
                     ),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required()]),
-                    items: DataSides
+                    items: DataSides.map((e) =>DateSideOption(text:e,value:e) )
                         .map((ds) => DropdownMenuItem(
                       alignment: AlignmentDirectional.center,
                       value: ds.value,

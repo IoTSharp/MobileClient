@@ -90,7 +90,7 @@ class _DeviceFormState extends State<DeviceForm>{
                       ),
                       validator: FormBuilderValidators.compose(
                           [FormBuilderValidators.required()]),
-                      items: DeviceTypes
+                      items: DeviceTypes.map((e) => DeviceTypeOption(text: e,value: e))
                           .map((dt) => DropdownMenuItem(
                         alignment: AlignmentDirectional.center,
                         value: dt.value,
@@ -130,7 +130,7 @@ class _DeviceFormState extends State<DeviceForm>{
                       ),
                       validator: FormBuilderValidators.compose(
                           [FormBuilderValidators.required()]),
-                      items: IdentityTypes
+                      items: IdentityTypes.map((e) => IdentityTypeOption(text: e,value: e))
                           .map((it) => DropdownMenuItem(
                         alignment: AlignmentDirectional.center,
                         value: it.value,

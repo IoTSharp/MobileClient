@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:iotsharp/util/global.dart';
+
 
 import '../models/deviceresult.dart';
+import '../models/eventargs.dart';
 import '../util/getit.dart';
+import '../util/global.dart';
 import '../widgets/advanced_datatable/advancedDataTableSource.dart';
 import '../widgets/advanced_datatable/datatable.dart';
 import 'device/devicepannel.dart';
@@ -18,7 +20,9 @@ import 'device/devicepropform.dart';
 import 'device/devicform.dart';
 
 class ListPage extends StatefulWidget {
-  String title = 'IotSharp';
+
+
+  const ListPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -101,9 +105,10 @@ class _ListPageState extends State<ListPage> {
     if (mounted) {
       getIt<EventBus>().on<String>().listen((event) {
         // All events are of type UserLoggedInEvent (or subtypes of it).
-        print(event);
+
       });
     }
+    super.initState();
   }
 }
 
@@ -127,7 +132,7 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
     var profile = getUserProfile();
     int page = (pageRequest.offset / pageRequest.pageSize).round();
     var result = await getIt<Dio>().get(
-        '${profile?.serverurl}/api/Devices/Customers?offset=${page}&limit=5&pi=0&ps=${pageRequest.pageSize}&sorter=&customerId=${profile?.comstomer}&name=${name}&sort=');
+        '${profile?.serverurl}/api/Devices/Customers?offset=$page&limit=5&pi=0&ps=${pageRequest.pageSize}&sorter=&customerId=${profile?.comstomer}&name=$name&sort=');
     var data = DeviceResult.fromJson(result.data);
     list = data.data?.rows ?? [];
     var rowCount = data.data?.total ?? 0;
@@ -194,21 +199,21 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
                         ],
                       )),
 
-                      Expanded(child: Row( children: [ Text('在线状态:'), Container(
+                      Expanded(child: Row( children: [  Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: (device.online ?? false)
-                                ? Colors.greenAccent
-                                : Colors.redAccent,
+                            color: (device.deviceType=='Device')
+                                ? Colors.lime
+                                : Colors.indigoAccent,
                           ),
                           child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5, 2, 5, 2),
                               child:
-                              Text((device.online ?? false) ? '在线' : '离线')))
+                              Text(device.deviceType??'',style: (device.deviceType=='Device')?TextStyle( color: Colors.deepPurple):TextStyle( color: Colors.white),),))
                        ],) )
                      ,
-                      Expanded(child: Row( children: [ Text('在线状态:'), Container(
+                      Expanded(child: Row( children: [  Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: (device.online ?? false)
@@ -219,7 +224,7 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5, 2, 5, 2),
                               child:
-                              Text((device.online ?? false) ? '在线' : '离线')))
+                              Text((device.online ?? false) ? '在线' : '离线',style: TextStyle( color: Colors.white))))
                       ],) )
                     ],
                   )),
@@ -245,7 +250,7 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
     //lastDetails!.rows[index].getRow(selectedRow, selectedIds);
   }
 
-  cellToolPressed(EventArgs args) {
+  cellToolPressed(EventArgs<DeviceItem> args) {
     switch (args.eventName) {
       case 'edit':
 
@@ -312,7 +317,7 @@ class DeviceDataSource extends AdvancedDataTableSource<DeviceItem> {
 }
 
 class CellHeader extends StatelessWidget {
-  final ValueChanged<EventArgs> onTap;
+  final ValueChanged<EventArgs<DeviceItem>> onTap;
   final DeviceItem item;
 
   const CellHeader({
@@ -358,7 +363,7 @@ class CellTool extends StatelessWidget {
   });
 
   final DeviceItem item;
-  final ValueChanged<EventArgs> onPressed;
+  final ValueChanged<EventArgs<DeviceItem>> onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +374,7 @@ class CellTool extends StatelessWidget {
           children: [
             OutlinedButton(
                 onPressed: () {
-                  onPressed(EventArgs(
+                  onPressed(EventArgs<DeviceItem>(
                       eventName: 'edit', item: item, context: context));
                 },
                 style: ButtonStyle(
@@ -395,7 +400,7 @@ class CellTool extends StatelessWidget {
 
             OutlinedButton(
                 onPressed: () {
-                  onPressed(EventArgs(
+                  onPressed(EventArgs<DeviceItem>(
                       eventName: 'delete', item: item, context: context));
                 },
                 style: ButtonStyle(
@@ -421,7 +426,7 @@ class CellTool extends StatelessWidget {
 
             OutlinedButton(
                 onPressed: () {
-                  onPressed(EventArgs(
+                  onPressed(EventArgs<DeviceItem>(
                       eventName: 'proptityadd', item: item, context: context));
                 },
                 style: ButtonStyle(
@@ -446,7 +451,7 @@ class CellTool extends StatelessWidget {
 
             OutlinedButton(
                 onPressed: () {
-                  onPressed(EventArgs(
+                  onPressed(EventArgs<DeviceItem>(
                       eventName: 'proptityedit', item: item, context: context));
                 },
                 style: ButtonStyle(
@@ -472,7 +477,7 @@ class CellTool extends StatelessWidget {
 
             OutlinedButton(
                 onPressed: () {
-                  onPressed(EventArgs(
+                  onPressed(EventArgs<DeviceItem>(
                       eventName: 'gettoken', item: item, context: context));
                 },
                 style: ButtonStyle(
@@ -496,11 +501,3 @@ class CellTool extends StatelessWidget {
   }
 }
 
-class EventArgs {
-  const EventArgs(
-      {required this.eventName, required this.item, required this.context});
-
-  final BuildContext context;
-  final DeviceItem item;
-  final String eventName;
-}
